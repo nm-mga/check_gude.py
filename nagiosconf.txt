@@ -1,0 +1,20 @@
+#
+# command definition
+#
+define command {
+  command_name   check_gudesensor_py
+  command_line   /usr/local/bin/check_gude.py -H '$HOSTADDRESS$' --sensor '$ARG1$' --nagios --warning $ARG2$ --critical $ARG3$ --operator "$ARG4$" --label "$ARG5$" --unit "$ARG6$"
+}
+
+
+#
+# Host specific config: 
+#   Query Temp1, warn >35, crit >40
+#
+define service {
+  use                   generic-service
+  host_name             esb7213-3.gudetest
+  service_description   Temp1
+  check_command         check_gudesensor_py!53.0.0!35!40!>!Temp!C
+  check_interval        1
+}

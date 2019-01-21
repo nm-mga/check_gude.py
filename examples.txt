@@ -1,0 +1,53 @@
+./check_gude.py -H esb7213-3.gudetest
+1: i006 i006
+	53.0.0 25.12 deg C Temperature
+	53.0.1 32.96 % Humidity
+	53.0.2 7.68 deg C Dew Point
+	53.0.3 17.44 deg C Dew Diff
+	53.0.4 1013.22 hPa Pressure
+2: 7106 7106
+	53.1.0 23.66 deg C Temperature
+	53.1.1 36.84 % Humidity
+	53.1.2 8.04 deg C Dew Point
+	53.1.3 15.63 deg C Dew Diff
+	53.1.4 1012.03 hPa Pressure
+3: 7106 7106
+	53.2.0 24.91 deg C Temperature
+	53.2.1 34.91 % Humidity
+	53.2.2 8.34 deg C Dew Point
+	53.2.3 16.57 deg C Dew Diff
+	53.2.4 1013.14 hPa Pressure
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.1.0
+53.1.0 Temperature 23.66 deg C
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.1.0 --numeric
+23.66
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.*.0
+53.0.0 Temperature 25.12 deg C
+53.1.0 Temperature 23.66 deg C
+53.2.0 Temperature 24.91 deg C
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.*
+53.0.0 Temperature 25.12 deg C
+53.0.1 Humidity 32.96 %
+53.0.2 Dew Point 7.68 deg C
+53.0.3 Dew Diff 17.44 deg C
+53.0.4 Pressure 1013.22 hPa
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 20 -c 25
+CRITICAL: sensor = 25.12(warn: 20, crit: 25, op:>)
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 20 -c 30 --label Temp --unit C
+WARNING: Temp = 25.12C(warn: 20, crit: 30, op:>)
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 10 -c 5 --label Temp --unit C --operator '<'
+OK: Temp = 25.12C(warn: 10, crit: 5, op:<)
+
+./check_gude.py -H esb7213-3.gudetest --sensor 53.?.0 --nagios -w 27 -c 25 --label Temp --unit C
+CRITICAL: Temp = 25.12C(warn: 27, crit: 25, op:>)
+OK: Temp = 23.66C(warn: 27, crit: 25, op:>)
+OK: Temp = 24.92C(warn: 27, crit: 25, op:>)
+
+

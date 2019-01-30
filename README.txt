@@ -1,6 +1,11 @@
-- Get Sensor data by http / json
-- can be used as nagios script
+check_gude.py
+===============
+- Get Sensor json data by http(s)
+- Can be used as Nagios script
 
+
+Examples
+===========
 
 # 
 # list all sensors

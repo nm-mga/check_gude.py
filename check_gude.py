@@ -18,6 +18,7 @@ parser.add_argument('-c', '--critical', help='nagios: threshold to exit as criti
 parser.add_argument('--operator', help='nagios: check warn/crit levels by one of >,<,>=,<=', default=">")
 parser.add_argument('--label', help='nagios: sensor label', default="sensor")
 parser.add_argument('--unit', help='nagios: sensor label', default="")
+parser.add_argument('--labelindex', help='use https connection', action="store_true")
 
 args = parser.parse_args()
 
@@ -148,7 +149,10 @@ class GudeSensor:
                 if fnmatch.fnmatch(sensor, self.filter):
                     if nagios:
                         exitcode = 0
-                        labelindex += 1
+                        if args.labelindex:
+                            labelindex += 1
+                        else:
+                            labelindex = ''
 
                         if not exitcode and self.checkThreshExceeded(self.values[sensor]["value"], critical, operator):
                             print(self.nagiosText("CRITICAL", self.values[sensor]["value"], str(labelindex)))

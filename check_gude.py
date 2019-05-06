@@ -13,8 +13,8 @@ parser.add_argument('--password', help='password for HTTP basic auth credemtials
 parser.add_argument('--sensor', help='')
 parser.add_argument('--numeric', help='', action="store_true", default=False)
 parser.add_argument('--nagios', help='', action="store_true", default=False)
-parser.add_argument('-w', '--warning', help='nagios: threshold to exit as warning level', default=0.0)
-parser.add_argument('-c', '--critical', help='nagios: threshold to exit as critical level', default=0.0)
+parser.add_argument('-w', '--warning', help='nagios: threshold to exit as warning level', default='')
+parser.add_argument('-c', '--critical', help='nagios: threshold to exit as critical level', default='')
 parser.add_argument('--operator', help='nagios: check warn/crit levels by one of >,<,>=,<=', default=">")
 parser.add_argument('--label', help='nagios: sensor label', default="sensor")
 parser.add_argument('--unit', help='nagios: sensor label', default="")
@@ -56,14 +56,26 @@ class GudeSensor:
     # check nagios limits
     #
     def checkThreshExceeded(self, value, thresh, operator):
-        if operator == '<' and float(value) < float(thresh):
-            return True
-        if operator == '>' and float(value) > float(thresh):
-            return True
-        if operator == '<=' and float(value) <= float(thresh):
-            return True
-        if operator == '>=' and float(value) >= float(thresh):
-            return True
+        if not len(str(thresh)):
+            return False
+
+        range = str(thresh).split(':')
+        if (len(range) == 2):
+            if range[0] and (float(value) < float(range[0])):
+                return True
+            if range[1] and (float(value) > float(range[1])):
+                return True
+
+        if (len(range) == 1):
+            if operator == '<' and (float(value) < float(thresh)):
+                return True
+            if operator == '>' and (float(value) > float(thresh)):
+                return True
+            if operator == '<=' and (float(value) <= float(thresh)):
+                return True
+            if operator == '>=' and (float(value) >= float(thresh)):
+                return True
+
         return False
 
     #

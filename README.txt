@@ -61,6 +61,13 @@ Examples
 53.0.4 Pressure 1016.3 hPa
 
 #
+# nagios command to warn above 20 and below 10, critical above 30 and below 5
+#
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 10:20 -c 5:30
+WARNING: sensor1=24.96 (w: 5:20, c: 10:25, op:>)
+esb7213-3.gudetest | sensor1=24.96;20;25
+
+#
 # nagios command to warn above 20, critical above 25
 #
 ./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 20 -c 25
@@ -71,7 +78,7 @@ esb7213-3.gudetest | sensor1=24.96;20;25
 # nagios command to warn above 20, critical above 25
 # rewrite label/unit to match nagiosgrapher config
 #
-./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 20 -c 30 --label Temp --unit C
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w :20 -c :30 --label Temp --unit C
 WARNING: Temp1=24.96C (w: 20, c: 30, op:>)
 esb7213-3.gudetest | Temp1=24.96C;20;30
 
@@ -79,7 +86,7 @@ esb7213-3.gudetest | Temp1=24.96C;20;30
 # nagios command to warn below 10, critical below 5
 # rewrite label/unit to match nagiosgrapher config
 #
-./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 10 -c 5 --label Temp --unit C --operator "<"
+./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 10: -c 5: --label Temp --unit C
 OK: Temp1=24.97C (w: 10, c: 5, op:<)
 esb7213-3.gudetest | Temp1=24.97C;10;5
 

@@ -4,6 +4,7 @@ import argparse
 import requests
 import json
 import fnmatch
+import time
 
 parser = argparse.ArgumentParser(prog='check_gude')
 parser.add_argument('-H', '--host', help='ip address of target host')
@@ -12,6 +13,7 @@ parser.add_argument('--username', help='username for HTTP basic auth credentials
 parser.add_argument('--password', help='password for HTTP basic auth credemtials')
 parser.add_argument('--sensor', help='')
 parser.add_argument('--numeric', help='', action="store_true", default=False)
+parser.add_argument('--interval', help='"watch"-like interval', default=0.0, type=float)
 parser.add_argument('--nagios', help='', action="store_true", default=False)
 parser.add_argument('-w', '--warning', help='nagios: threshold to exit as warning level', default='')
 parser.add_argument('-c', '--critical', help='nagios: threshold to exit as critical level', default='')
@@ -201,12 +203,17 @@ class GudeSensor:
         self.collectSensorData()
 
 
-try:
-    gudeSensors = GudeSensor(str(args.host), args.sensor, args.ssl, args.username, args.password)
-except:
-    print("ERROR getting sensor json")
-    exit(EXIT_ERROR)
+while True:
+    try:
+        gudeSensors = GudeSensor(str(args.host), args.sensor, args.ssl, args.username, args.password)
+    except:
+        print("ERROR getting sensor json")
+        exit(EXIT_ERROR)
+    gudeSensors.printSensorInfo(args.label, args.unit, args.numeric, args.nagios, args.critical, args.warning, args.operator)
 
-gudeSensors.printSensorInfo(args.label, args.unit, args.numeric, args.nagios, args.critical, args.warning,
-                            args.operator)
+    if args.interval:
+        time.sleep(args.interval)
+    else:
+        break
+
 exit(gudeSensors.exitcode)

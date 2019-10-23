@@ -31,6 +31,7 @@ EXIT_ERROR = 2
 
 class GudeSensor:
     values = {}
+    vektors = []
 
     #
     # get sensor_desc / sensor_values as JSON objects
@@ -104,6 +105,7 @@ class GudeSensor:
             'name': fieldProp["name"]
         }
         self.values[locatorStr] = field
+        self.vektors.append(locatorStr)
         if not self.filter:
             print("{0}{1} {2} {3} {4}".format(prefix, locatorStr, field["value"], fieldProp["unit"], fieldProp["name"]))
         return field
@@ -159,7 +161,7 @@ class GudeSensor:
 
         nagiosPerfomanceText = "";
         if self.filter:
-            for sensor in gudeSensors.values:
+            for sensor in gudeSensors.vektors:
                 if fnmatch.fnmatch(sensor, self.filter):
                     if nagios:
                         exitcode = 0

@@ -31,7 +31,6 @@ EXIT_ERROR = 2
 
 class GudeSensor:
     values = {}
-    vektors = []
 
     #
     # get sensor_desc / sensor_values as JSON objects
@@ -105,7 +104,6 @@ class GudeSensor:
             'name': fieldProp["name"]
         }
         self.values[locatorStr] = field
-        self.vektors.append(locatorStr)
         if not self.filter:
             print("{0}{1} {2} {3} {4}".format(prefix, locatorStr, field["value"], fieldProp["unit"], fieldProp["name"]))
         return field
@@ -129,11 +127,12 @@ class GudeSensor:
 
             for (si, sensorProp) in enumerate(sensorType["properties"]):
                 self.printSensorIdStr(sensorProp)
+                id = sensorProp.get("real_id", si)
 
                 # simple ungrouped sensors
                 if 'fields' in sensorType:
                     for (sf, fieldProp) in enumerate(sensorType["fields"]):
-                        field = self.store("{0}.{1}.{2}".format(st, si, sf),
+                        field = self.store("{0}.{1}.{2}".format(st, id, sf),
                                            sensorValues[si][sf]["v"],
                                            fieldProp, "\t")
 
@@ -143,7 +142,7 @@ class GudeSensor:
                         for (grm, groupMember) in enumerate(sensorGroup):
                             self.printSensorIdStr(groupMember, "\t")
                             for (sf, fieldProp) in enumerate(sensorType["groups"][gi]["fields"]):
-                                field = self.store("{0}.{1}.{2}.{3}.{4}".format(st, si, gi, grm, sf),
+                                field = self.store("{0}.{1}.{2}.{3}.{4}".format(st, id, gi, grm, sf),
                                                    sensorValues[si][gi][grm][sf]["v"],
                                                    fieldProp, "\t\t")
 
@@ -161,7 +160,7 @@ class GudeSensor:
 
         nagiosPerfomanceText = "";
         if self.filter:
-            for sensor in gudeSensors.vektors:
+            for sensor in gudeSensors.values:
                 if fnmatch.fnmatch(sensor, self.filter):
                     if nagios:
                         exitcode = 0
@@ -204,14 +203,15 @@ class GudeSensor:
         self.sensorJson = self.getSensorsJson(host, ssl, username, password)
         self.collectSensorData()
 
-
 while True:
     try:
         gudeSensors = GudeSensor(str(args.host), args.sensor, args.ssl, args.username, args.password)
     except:
         print("ERROR getting sensor json")
         exit(EXIT_ERROR)
-    gudeSensors.printSensorInfo(args.label, args.unit, args.numeric, args.nagios, args.critical, args.warning, args.operator)
+
+    gudeSensors.printSensorInfo(args.label, args.unit, args.numeric, args.nagios, args.critical, args.warning,
+                                args.operator)
 
     if args.interval:
         time.sleep(args.interval)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import argparse
 import requests
@@ -113,7 +113,7 @@ class GudeSensor:
     #
     def printSensorIdStr(self, sensorProp, prefix=""):
         if not self.filter:
-            print("{0}{1} {2}".format(prefix, sensorProp["id"], sensorProp["name"]))
+            print("{0}{1} {2}".format(prefix, sensorProp.get('id', ''), sensorProp.get('name', '')))
 
     #
     # walk and merge sensor_decr/sensor_value

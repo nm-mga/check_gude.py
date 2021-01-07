@@ -47,7 +47,7 @@ class GudeSensor:
         if username:
             auth = requests.auth.HTTPBasicAuth(username, password)
 
-        r = requests.get(url, params={'components': 0x14000}, verify=False, auth=auth)
+        r = requests.get(url, params={'components': 0x814000}, verify=False, auth=auth)
 
         if r.status_code == 200:
             return json.loads(r.text)

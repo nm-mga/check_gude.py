@@ -50,21 +50,7 @@ class GudeSensor:
         if username:
             auth = requests.auth.HTTPBasicAuth(username, password)
 
-        DESCR  = 0x10000
-        VALUES = 0x4000
-        EXTEND = 0x800000  # enables complex sensors-groups, such as Sensor 101, 20, etc...
-        SENSORS = DESCR + VALUES
-
-        if args.skipcomplex:
-            cgi = {'components': SENSORS}  # simple-sensors only (fully backward compatible)
-        elif args.skipsimple:
-            cgi = {'components': SENSORS + EXTEND, 'types': 'C'}  # complex sensors-groups only
-        else:
-            cgi = {'components': SENSORS + EXTEND}  # simple-sensors + complex sensors-groups in one merged view
-
-
-        # print (f"{url}\n\t{cgi}")
-        r = requests.get(url, params=cgi, verify=False, auth=auth)
+        r = requests.get(url, params={'components': 0x814000}, verify=False, auth=auth)
 
         if r.status_code == 200:
             return json.loads(r.text)

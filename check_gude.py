@@ -21,6 +21,9 @@ parser.add_argument('--operator', help='nagios: check warn/crit levels by one of
 parser.add_argument('--label', help='nagios: sensor label', default="sensor")
 parser.add_argument('--unit', help='nagios: sensor label', default="")
 parser.add_argument('--labelindex', help='prepend numeric sensor iteration to nagios label', action="store_true")
+parser.add_argument('--skipsimple', help='demo filter to show backward compatiblity', action="store_true")
+parser.add_argument('--skipcomplex', help='demo filter to show backward compatiblity', action="store_true")
+
 
 args = parser.parse_args()
 
@@ -47,7 +50,21 @@ class GudeSensor:
         if username:
             auth = requests.auth.HTTPBasicAuth(username, password)
 
-        r = requests.get(url, params={'components': 0x14000}, verify=False, auth=auth)
+        DESCR  = 0x10000
+        VALUES = 0x4000
+        EXTEND = 0x800000  # enables complex sensors-groups, such as Sensor 101, 20, etc...
+        SENSORS = DESCR + VALUES
+
+        if args.skipcomplex:
+            cgi = {'components': SENSORS}  # simple-sensors only (fully backward compatible)
+        elif args.skipsimple:
+            cgi = {'components': SENSORS + EXTEND, 'types': 'C'}  # complex sensors-groups only
+        else:
+            cgi = {'components': SENSORS + EXTEND}  # simple-sensors + complex sensors-groups in one merged view
+
+
+        # print (f"{url}\n\t{cgi}")
+        r = requests.get(url, params=cgi, verify=False, auth=auth)
 
         if r.status_code == 200:
             return json.loads(r.text)

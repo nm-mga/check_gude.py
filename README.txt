@@ -1,6 +1,7 @@
 check_gude.py
 ===============
-- Get Sensor json data by http(s)
+- Get Sensor json data by http
+  - HTTP Authentification and SSL encryption supported by optional command line parameters
 - Can be used as Nagios script
 
 

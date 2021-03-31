@@ -23,6 +23,7 @@ parser.add_argument('--unit', help='nagios: sensor label', default="")
 parser.add_argument('--labelindex', help='prepend numeric sensor iteration to nagios label', action="store_true")
 parser.add_argument('--skipsimple', help='demo filter to show backward compatiblity', action="store_true")
 parser.add_argument('--skipcomplex', help='demo filter to show backward compatiblity', action="store_true")
+parser.add_argument('--verbose', help='', action="store_true", default=False)
 
 
 args = parser.parse_args()
@@ -62,11 +63,13 @@ class GudeSensor:
         else:
             cgi = {'components': SENSORS + EXTEND}  # simple-sensors + complex sensors-groups in one merged view
 
-
-        # print (f"{url}\n\t{cgi}")
         r = requests.get(url, params=cgi, verify=False, auth=auth)
 
         if r.status_code == 200:
+            if args.verbose:
+                print (f"HTTP GET:\n\t{r.url}")
+                print (f"HTTP RESPONSE:\n\t{r.text}\n\n")
+
             return json.loads(r.text)
         else:
             raise ValueError("http request error {0}".format(r.status))

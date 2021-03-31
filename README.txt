@@ -12,36 +12,52 @@ Examples
 # list all sensors (e.g. of device with IP Adresse 192.168.0.2)
 #
 ./check_gude.py -H 192.168.0.2
-1: i006 i006
-	53.0.0 24.96 deg C Temperature
-	53.0.1 33.41 % Humidity
-	53.0.2 7.74 deg C Dew Point
-	53.0.3 17.22 deg C Dew Diff
-	53.0.4 1016.3 hPa Pressure
-2: 7106 7106
-	53.1.0 23.42 deg C Temperature
-	53.1.1 37.88 % Humidity
-	53.1.2 8.23 deg C Dew Point
-	53.1.3 15.19 deg C Dew Diff
-	53.1.4 1015.0 hPa Pressure
-3: 7106 7106
-	53.2.0 24.22 deg C Temperature
-	53.2.1 36.46 % Humidity
-	53.2.2 8.38 deg C Dew Point
-	53.2.3 15.84 deg C Dew Diff
-	53.2.4 1016.18 hPa Pressure
+L1 Meter1
+        9.0.0 232.47 V Voltage
+        9.0.1 0.0 A Current
+        9.0.2 50.01 Hz Frequency
+        9.0.3 -31.6 deg PhaseIU
+        9.0.4 0.0 W ActivePower
+        9.0.5 1.0 VAR ReactivePower
+        9.0.6 0.0 VA ApparentPower
+        9.0.7 1.0  PowerFactor
+        9.0.8 0.0 A Residual Current
+        9.0.9 -106.8 deg PhaseIU N
+        9.0.10 -1.0 W ActivePower N
+        9.0.11 -1.0 VAR ReactivePower N
+        9.0.12 0.0 VA ApparentPower N
+        9.0.13 -0.093  PowerFactor N
+        9.0.14 0.717 kWh AbsActEnergyNonRes
+        9.0.15 2.122 kVARh AbsReactEnergyNonRes
+        9.0.16 0.717 kWh AbsActEnergyRes
+        9.0.17 2.122 kVARh AbsReactEnergyRes
+        9.0.18 7336758 s RelativeTime
+        9.0.19 0.717 kWh FwdActEnergyNonRes
+        9.0.20 2.122 kVARh FwdReactEnergyNonRes
+        9.0.21 0.717 kWh FwdActEnergyRes
+        9.0.22 2.122 kVARh FwdReactEnergyRes
+        9.0.23 0.0 kWh RevActEnergyNonRes
+        9.0.24 0.0 kVARh RevReactEnergyNonRes
+        9.0.25 0.0 kWh RevActEnergyRes
+        9.0.26 0.0 kVARh RevReactEnergyRes
+1: 7105 7105
+        52.0.0 27.1 deg C Temperature
+        52.0.1 32.6 % Humidity
+        52.0.2 9.3 deg C Dew Point
+        52.0.3 17.8 deg C Dew Diff
+
 
 #
 # query single sensor value
 #
-./check_gude.py -H 192.168.0.2 --sensor 53.1.0
-53.1.0 Temperature 23.42 deg C
+./check_gude.py -H 192.168.0.2 --sensor 52.0.0
+52.0.0 27.1 deg C Temperature
 
 #
 # query single sensor value (value only)
 #
 ./check_gude.py -H 192.168.0.2 --sensor 53.1.0 --numeric
-23.42
+27.1
 
 #
 # query multiple sensor values

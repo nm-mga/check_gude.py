@@ -34,7 +34,7 @@ Examples
 #
 # query single sensor value
 #
-./check_gude.py -H esb7213-3.gudetest --sensor 53.1.0
+./check_gude.py -H 192.168.0.2 --sensor 53.1.0
 53.1.0 Temperature 23.42 deg C
 
 #
@@ -54,7 +54,7 @@ Examples
 #
 # query multiple sensor values
 #
-./check_gude.py -H esb7213-3.gudetest --sensor 53.0.*
+./check_gude.py -H 192.168.0.2 --sensor 53.0.*
 53.0.2 Dew Point 7.74 deg C
 53.0.3 Dew Diff 17.22 deg C
 53.0.0 Temperature 24.96 deg C
@@ -71,7 +71,7 @@ esb7213-3.gudetest | sensor1=24.96;20;25
 #
 # nagios command to warn above 20, critical above 25
 #
-./check_gude.py -H esb7213-3.gudetest --sensor 53.0.0 --nagios -w 20 -c 25
+./check_gude.py -H 192.168.0.2 --sensor 53.0.0 --nagios -w 20 -c 25
 WARNING: sensor1=24.96 (w: 20, c: 25, op:>)
 esb7213-3.gudetest | sensor1=24.96;20;25
 

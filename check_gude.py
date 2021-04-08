@@ -37,7 +37,7 @@ class GudeSensor:
     values = {}
 
     #
-    # get sensor_desc / sensor_values as JSON objects
+    # get sensor_descr / sensor_values as JSON objects
     #
     def getSensorsJson(self, host, ssl, username=None, password=None):
         if ssl:
@@ -75,7 +75,7 @@ class GudeSensor:
             raise ValueError("http request error {0}".format(r.status))
 
     #
-    # walk and merge sensor_decr/sensor_value
+    # walk and merge sensor_descr / sensor_value
     #
     def collectSensorData(self):
         jsonIndex = -1
@@ -88,14 +88,14 @@ class GudeSensor:
                 self.printSensorIdStr(sensorProp)
                 id = sensorProp.get("real_id", si)
 
-                # simple ungrouped sensors
+                # simple sensor
                 if 'fields' in sensorType:
                     for (sf, fieldProp) in enumerate(sensorType["fields"]):
                         field = self.store("{0}.{1}.{2}".format(st, id, sf),
                                            sensorValues[si][sf]["v"],
                                            fieldProp, "\t")
 
-                # complex sensor groups
+                # sensor groups
                 if 'groups' in sensorType:
                     for (gi, sensorGroup) in enumerate(sensorProp["groups"]):
                         for (grm, groupMember) in enumerate(sensorGroup):
@@ -106,7 +106,7 @@ class GudeSensor:
                                                    fieldProp, "\t\t")
 
     #
-    # store sensor-field as dict identified by locatorStr
+    # store sensor-field as dict identified by locatorStr (vector)
     #
     def store(self, locatorStr, value, fieldProp, prefix=""):
         field = {
@@ -160,7 +160,7 @@ class GudeSensor:
             exitcode = level
 
     #
-    # print Sensor id / name
+    # print sensor id / name
     #
     def printSensorIdStr(self, sensorProp, prefix=""):
         if not self.filter:

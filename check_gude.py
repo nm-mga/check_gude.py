@@ -75,67 +75,6 @@ class GudeSensor:
             raise ValueError("http request error {0}".format(r.status))
 
     #
-    # check nagios limits
-    #
-    def checkThreshExceeded(self, value, thresh, operator):
-        if not len(str(thresh)):
-            return False
-
-        range = str(thresh).split(':')
-        if (len(range) == 2):
-            if range[0] and (float(value) < float(range[0])):
-                return True
-            if range[1] and (float(value) > float(range[1])):
-                return True
-
-        if (len(range) == 1):
-            if operator == '<' and (float(value) < float(thresh)):
-                return True
-            if operator == '>' and (float(value) > float(thresh)):
-                return True
-            if operator == '<=' and (float(value) <= float(thresh)):
-                return True
-            if operator == '>=' and (float(value) >= float(thresh)):
-                return True
-
-        return False
-
-    #
-    # print nagios status text
-    #
-    def nagiosText(self, level, value, labelindex):
-        return ("{0}: {1}={2}{3} (w: {4}, c: {5}, op:{6})".format(
-            level, self.label + labelindex, value, self.unit, self.warning, self.critical, self.operator))
-
-    #
-    # set nagios exit code to most critical item
-    #
-    def setExitCode(self, exitcode, level):
-        if level > exitcode:
-            exitcode = level
-
-    #
-    # store sensor-field as dict identified by locatorStr
-    #
-    def store(self, locatorStr, value, fieldProp, prefix=""):
-        field = {
-            'value': value,
-            'unit': fieldProp["unit"],
-            'name': fieldProp["name"]
-        }
-        self.values[locatorStr] = field
-        if not self.filter:
-            print("{0}{1} {2} {3} {4}".format(prefix, locatorStr, field["value"], fieldProp["unit"], fieldProp["name"]))
-        return field
-
-    #
-    # print Sensor id / name
-    #
-    def printSensorIdStr(self, sensorProp, prefix=""):
-        if not self.filter:
-            print("{0}{1} {2}".format(prefix, sensorProp.get('id', ''), sensorProp.get('name', '')))
-
-    #
     # walk and merge sensor_decr/sensor_value
     #
     def collectSensorData(self):
@@ -167,7 +106,68 @@ class GudeSensor:
                                                    fieldProp, "\t\t")
 
     #
-    # print all requestes sensors
+    # store sensor-field as dict identified by locatorStr
+    #
+    def store(self, locatorStr, value, fieldProp, prefix=""):
+        field = {
+            'value': value,
+            'unit': fieldProp["unit"],
+            'name': fieldProp["name"]
+        }
+        self.values[locatorStr] = field
+        if not self.filter:
+            print("{0}{1} {2} {3} {4}".format(prefix, locatorStr, field["value"], fieldProp["unit"], fieldProp["name"]))
+        return field
+
+    #
+    # nagios : check sensor value limits
+    #
+    def checkThreshExceeded(self, value, thresh, operator):
+        if not len(str(thresh)):
+            return False
+
+        range = str(thresh).split(':')
+        if (len(range) == 2):
+            if range[0] and (float(value) < float(range[0])):
+                return True
+            if range[1] and (float(value) > float(range[1])):
+                return True
+
+        if (len(range) == 1):
+            if operator == '<' and (float(value) < float(thresh)):
+                return True
+            if operator == '>' and (float(value) > float(thresh)):
+                return True
+            if operator == '<=' and (float(value) <= float(thresh)):
+                return True
+            if operator == '>=' and (float(value) >= float(thresh)):
+                return True
+
+        return False
+
+    #
+    # nagios : print status text (performance data)
+    #
+    def nagiosText(self, level, value, labelindex):
+        return ("{0}: {1}={2}{3} (w: {4}, c: {5}, op:{6})".format(
+            level, self.label + labelindex, value, self.unit, self.warning, self.critical, self.operator))
+
+    #
+    # nagios : set exit code to most critical item
+    #
+    def setExitCode(self, exitcode, level):
+        if level > exitcode:
+            exitcode = level
+
+    #
+    # print Sensor id / name
+    #
+    def printSensorIdStr(self, sensorProp, prefix=""):
+        if not self.filter:
+            print("{0}{1} {2}".format(prefix, sensorProp.get('id', ''), sensorProp.get('name', '')))
+
+    #
+    # print all requested sensors
     #
     def printSensorInfo(self, label, unit, numeric, nagios, critical, warning, operator):
         maxexitcode = 0

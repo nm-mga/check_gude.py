@@ -11,6 +11,7 @@ parser.add_argument('-H', '--host', help='ip address of target host')
 parser.add_argument('-s', '--ssl', help='use https connection', action="store_true")
 parser.add_argument('--username', help='username for HTTP basic auth credentials')
 parser.add_argument('--password', help='password for HTTP basic auth credemtials')
+parser.add_argument('-t', '--timeout', help='HTTP timeout value', default=5.0, type=float)
 parser.add_argument('--sensor', help='')
 parser.add_argument('--numeric', help='', action="store_true", default=False)
 parser.add_argument('--interval', help='"watch"-like interval', default=0.0, type=float)
@@ -39,7 +40,7 @@ class GudeSensor:
     #
     # get sensor_descr / sensor_values as JSON objects
     #
-    def getSensorsJson(self, host, ssl, username=None, password=None):
+    def getSensorsJson(self, host, ssl, timeout, username=None, password=None):
         if ssl:
             url = 'https://'
         else:
@@ -63,7 +64,7 @@ class GudeSensor:
         else:
             cgi = {'components': SENSORS + EXTEND}  # simple-sensors + complex sensors-groups in one merged view
 
-        r = requests.get(url, params=cgi, verify=False, auth=auth)
+        r = requests.get(url, params=cgi, verify=False, auth=auth, timeout=timeout)
 
         if r.status_code == 200:
             if args.verbose:
@@ -217,15 +218,15 @@ class GudeSensor:
 
         self.exitcode = maxexitcode
 
-    def __init__(self, host, filter, ssl, username, password):
+    def __init__(self, host, filter, ssl, timeout, username, password):
         self.filter = filter
         self.host = host
-        self.sensorJson = self.getSensorsJson(host, ssl, username, password)
+        self.sensorJson = self.getSensorsJson(host, ssl, timeout, username, password)
         self.collectSensorData()
 
 while True:
     try:
-        gudeSensors = GudeSensor(str(args.host), args.sensor, args.ssl, args.username, args.password)
+        gudeSensors = GudeSensor(str(args.host), args.sensor, args.ssl, args.timeout, args.username, args.password)
     except:
         print("ERROR getting sensor json")
         exit(EXIT_ERROR)

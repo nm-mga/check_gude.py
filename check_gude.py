@@ -18,6 +18,8 @@ parser.add_argument('--interval', help='"watch"-like interval', default=0.0, typ
 parser.add_argument('--nagios', help='', action="store_true", default=False)
 parser.add_argument('-w', '--warning', help='nagios: threshold to exit as warning level', default='')
 parser.add_argument('-c', '--critical', help='nagios: threshold to exit as critical level', default='')
+parser.add_argument('-m', '--minimum', help='nagios: threshold to set as minimum level', default='0')
+parser.add_argument('-M', '--maximum', help='nagios: threshold to exit as maximum level', default='')
 parser.add_argument('--operator', help='nagios: check warn/crit levels by one of >,<,>=,<=', default=">")
 parser.add_argument('--label', help='nagios: sensor label', default="sensor")
 parser.add_argument('--unit', help='nagios: sensor unit', default="")
@@ -170,13 +172,15 @@ class GudeSensor:
     #
     # print all requested sensors
     #
-    def printSensorInfo(self, label, unit, numeric, nagios, critical, warning, operator):
+    def printSensorInfo(self, label, unit, numeric, nagios, critical, warning, operator, minimum, maximum ):
         maxexitcode = 0
         labelindex = 0
         self.label = label
         self.unit = unit
         self.warning = warning
         self.critical = critical
+        self.minimum = minimum
+        self.maximum = maximum
         self.operator = operator
 
         nagiosPerfomanceText = "";
@@ -204,7 +208,12 @@ class GudeSensor:
                         if maxexitcode < exitcode:
                             maxexitcode = exitcode
 
-                        nagiosPerfomanceText += " {0}{1}={2}{3};{4};{5}".format(label, labelindex, self.values[sensor]["value"], unit, warning, critical)
+                        nagiosPerfomanceText += " {0}{1}={2}{3};{4};{5};{6};{7}".format(
+                            label, labelindex,
+                            self.values[sensor]["value"], unit,
+                            warning, critical,
+                            minimum, maximum
+                            )
                     else:
                         if not numeric:
                             print("{0} {1} {2} {3}".format(sensor, self.values[sensor]["name"],
@@ -231,8 +240,9 @@ while True:
         print("ERROR getting sensor json")
         exit(EXIT_ERROR)
 
-    gudeSensors.printSensorInfo(args.label, args.unit, args.numeric, args.nagios, args.critical, args.warning,
-                                args.operator)
+    gudeSensors.printSensorInfo(args.label, args.unit, args.numeric,
+                                args.nagios, args.critical, args.warning, args.operator, args.minimum, args.maximum
+                                )
 
     if args.interval:
         time.sleep(args.interval)

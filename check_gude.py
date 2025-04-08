@@ -20,7 +20,7 @@ parser.add_argument('-w', '--warning', help='nagios: threshold to exit as warnin
 parser.add_argument('-c', '--critical', help='nagios: threshold to exit as critical level', default='')
 parser.add_argument('--operator', help='nagios: check warn/crit levels by one of >,<,>=,<=', default=">")
 parser.add_argument('--label', help='nagios: sensor label', default="sensor")
-parser.add_argument('--unit', help='nagios: sensor label', default="")
+parser.add_argument('--unit', help='nagios: sensor unit', default="")
 parser.add_argument('--labelindex', help='prepend numeric sensor iteration to nagios label', action="store_true")
 parser.add_argument('--skipsimple', help='demo filter to show backward compatiblity', action="store_true")
 parser.add_argument('--skipcomplex', help='demo filter to show backward compatiblity', action="store_true")
